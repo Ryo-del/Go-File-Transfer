@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Менеджер файлов</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="container manager-container">
+        
+        <a href="/" class="button back-button">← Вернуться к загрузке</a>
+        
+        <h1>🗂️ Загруженные файлы</h1>
+
+        {{if .Uploaded}}
+            <div class="alert success">Файл **{{.Uploaded}}** успешно загружен!</div>
+        {{end}}
+        {{if .Deleted}}
+            <div class="alert deleted">Файл **{{.Deleted}}** успешно удален.</div>
+        {{end}}
+
+        {{if .Files}}
+            <ul class="file-list">
+                {{range .Files}}
+                    <li>
+                        <span class="file-name-size">
+                            <span class="name">{{.Name}}</span> 
+                            <span class="size">({{.Size}})</span>
+                        </span>
+                        <div class="actions">
+                            <a href="/files/{{.Name}}" class="button action-button download" download="{{.Name}}">↓ Скачать</a>
+                            
+                            <form method="POST" action="/delete/{{.Name}}" onsubmit="return confirm('Вы уверены, что хотите удалить файл: {{.Name}}?');">
+                                <button type="submit" class="button action-button delete">🗑️ Удалить</button>
+                            </form>
+                        </div>
+                    </li>
+                {{end}}
+            </ul>
+        {{else}}
+            <p class="empty-message">Пока нет загруженных файлов.</p>
+        {{end}}
+        
+    </div>
+</body>
+</html>

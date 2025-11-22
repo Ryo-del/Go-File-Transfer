@@ -9,19 +9,23 @@
 <body>
     <div class="container">
         <h1>🚀 Быстрая передача файлов</h1>
-        <p>Загрузите файл с телефона, чтобы скачать его на компьютере (или наоборот).</p>
-        
+        <p>Загрузите файл с телефона, чтобы скачать его на компьютере.</p>
+
         <form action="/upload" method="post" enctype="multipart/form-data" class="upload-form">
-            
+
             <label for="file-input" class="button">
                 Выбрать файл
             </label>
             <input type="file" name="uploadFile" id="file-input" required style="display: none;">
-            
+
             <span id="file-name" class="file-info">Файл не выбран</span>
 
             <button type="submit" class="button primary" id="upload-button" disabled>Загрузить</button>
-        </form>
+        </form> <div class="center-content">
+            <hr>
+            <a href="/manager" class="button secondary">🗂️ Перейти к загруженным файлам</a>
+        </div>
+
     </div>
 
     <script>

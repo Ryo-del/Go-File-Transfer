@@ -88,3 +88,144 @@ p {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+/* ... (Остальные стили из предыдущего ответа) ... */
+
+/* Добавление новых стилей */
+
+.container.manager-container {
+    max-width: 700px;
+    text-align: left;
+}
+
+.back-button {
+    margin-bottom: 20px;
+    background-color: #f8f9fa;
+    color: #495057;
+    padding: 8px 15px;
+}
+/* Должен быть блочным элементом, чтобы margin auto работал */
+.secondary {
+    background-color: #6c757d;
+    color: white;
+    margin-top: 15px;
+    /* Новые стили для центрирования: */
+    display: inline-block; /* Делаем его блочным, но подстраивающимся под контент */
+    margin: 15px auto 0 auto; /* Устанавливаем отступ сверху и авто-отступы по бокам для центрирования */
+}
+.secondary:hover {
+    background-color: #5a6268;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #e9ecef;
+    margin: 25px 0;
+}
+
+.file-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.file-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 8px;
+    background-color: #f1f3f5;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.file-name-size {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.file-name-size .name {
+    font-weight: bold;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-name-size .size {
+    font-size: 0.9em;
+    color: #6c757d;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.action-button {
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.download {
+    background-color: #28a745;
+    color: white;
+}
+.download:hover {
+    background-color: #218838;
+}
+
+.delete {
+    background-color: #dc3545;
+    color: white;
+}
+.delete:hover {
+    background-color: #c82333;
+}
+
+/* Сообщения */
+.alert {
+    padding: 10px 20px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.alert.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert.deleted {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.empty-message {
+    text-align: center;
+    color: #adb5bd;
+    padding: 30px;
+    border: 1px dashed #ced4da;
+    border-radius: 8px;
+}
+.center-content {
+    text-align: center; /* Центрирует все внутренние строчные и inline-block элементы */
+}
+/* Адаптивность для мобильных устройств */
+@media (max-width: 600px) {
+    .file-list li {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .actions {
+        margin-top: 10px;
+        width: 100%;
+    }
+    .action-button {
+        flex-grow: 1; /* Кнопки занимают всю ширину */
+    }
+}
