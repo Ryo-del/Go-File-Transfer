@@ -62,7 +62,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	r.ParseMultipartForm(100 << 20)
+	r.ParseMultipartForm(1024 << 20)
 
 	file, header, err := r.FormFile("uploadFile")
 	if err != nil {
