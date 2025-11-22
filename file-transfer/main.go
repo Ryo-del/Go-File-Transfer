@@ -9,10 +9,18 @@ import (
 	"path/filepath"
 )
 
+// Используем ту же директорию, но помним о временном хранении в облаке
 const uploadDir = "./uploads"
 
 func main() {
-	// Создаем директорию для загрузки, если она не существует
+	// --- ИЗМЕНЕНИЕ: Динамическое определение порта ---
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // Дефолт для локального запуска
+	}
+	listenAddr := ":" + port
+	// --- Конец изменения ---
+
 	if _, err := os.Stat(uploadDir); os.IsNotExist(err) {
 		err = os.Mkdir(uploadDir, 0755)
 		if err != nil {
@@ -20,33 +28,27 @@ func main() {
 		}
 	}
 
-	// 1. Обслуживание статических файлов (HTML, CSS)
-	// http.FileServer будет отдавать содержимое директории static
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/", fs)
 
-	// 2. Обработчик загрузки файлов
 	http.HandleFunc("/upload", uploadHandler)
 
-	// 3. Обслуживание загруженных файлов для скачивания
-	// Файлы будут доступны по /files/{имя_файла}
 	downloadFs := http.FileServer(http.Dir(uploadDir))
 	http.Handle("/files/", http.StripPrefix("/files/", downloadFs))
 
-	port := ":8080"
-	fmt.Printf("Сервер запущен на http://localhost%s\n", port)
+	fmt.Printf("Сервер запущен на http://localhost%s\n", listenAddr)
 	fmt.Printf("Загрузки будут сохранены в %s\n", uploadDir)
-	log.Fatal(http.ListenAndServe(port, nil))
+	log.Fatal(http.ListenAndServe(listenAddr, nil))
 }
 
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
+	// ... (Остальная часть uploadHandler остается без изменений)
 	if r.Method != "POST" {
 		http.Error(w, "Метод не разрешен", http.StatusMethodNotAllowed)
 		return
 	}
 
-	// Устанавливаем максимальный размер загрузки, например, 100MB
-	r.ParseMultipartForm(100 << 20) // 100MB
+	r.ParseMultipartForm(100 << 20)
 
 	file, header, err := r.FormFile("uploadFile")
 	if err != nil {
@@ -55,7 +57,6 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	// Создаем новый файл на сервере
 	newFileName := filepath.Join(uploadDir, header.Filename)
 	newFile, err := os.Create(newFileName)
 	if err != nil {
@@ -64,20 +65,16 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer newFile.Close()
 
-	// Копируем загруженный файл в новый файл на сервере
 	_, err = io.Copy(newFile, file)
 	if err != nil {
 		http.Error(w, "Ошибка при записи файла на диск", http.StatusInternalServerError)
 		return
 	}
 
-	// Перенаправляем пользователя на страницу скачивания (которая по сути является списком файлов)
-	// В минималистичном варианте просто выведем ссылку на скачивание.
-	// Более сложный вариант может быть списком файлов.
 	downloadURL := fmt.Sprintf("/files/%s", header.Filename)
 
-	// Используем простой HTML-ответ для перенаправления/уведомления
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	// Здесь можно использовать более сложный шаблон для красивого вывода
 	fmt.Fprintf(w, `
 		<!DOCTYPE html>
 		<html>
